@@ -1,0 +1,48 @@
+name: Build Docker Images
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    tags:
+      - 'v*'
+    branches: [ main ]
+
+jobs:
+
+  build-images:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    steps:
+      # Check out code
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Determine tag we will use for images
+      - name: Get Image Version
+        shell: bash
+        run: |
+          echo ::set-output name=tag::$([[ "${GITHUB_REF##*/}" == "main" ]] && echo latest || echo ${GITHUB_REF##*/})
+        id: version
+
+      # # Setup QEMU
+      # - name: Setup QEMU
+      #   uses: docker/setup-qemu-action@v1
+      #   with:
+      #     platforms: all
+
+      # # Set up a buildx runner
+      # - name: Set up Docker Buildx
+      #   id: buildx
+      #   uses: docker/setup-buildx-action@v1
+      #   with:
+      #     buildkitd-flags: "--debug"
+
+      # Login to the container registry
+      - name: Login to Container Registry
+        run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+        if: ${{ github.event_name != 'pull_request' }}
+
+      # Build and push images
+      - name: Build and Push Docker Images
+        run: make docker-push-multiarch TAG=${{ steps.version.outputs.tag }}
