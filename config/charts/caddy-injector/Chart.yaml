@@ -1,0 +1,6 @@
+apiVersion: v2
+name: caddy-injector
+description: A webhook for injecting caddy sidecars into pods.
+type: application
+version: 0.1.0
+appVersion: "latest"

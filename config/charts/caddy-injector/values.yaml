@@ -1,0 +1,64 @@
+# Default values for caddy-injector.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- The number of webhook replicas to run.
+replicaCount: 1
+
+# -- The cluster domain suffix. Used for determining DNS names of the webhook certificate.
+domainSuffix: "cluster.local"
+
+image:
+  # -- The repository to pull the image.
+  repository: ghcr.io/tinyzimmer/caddy-injector
+  # -- The pull policy for retrieving the image.
+  pullPolicy: IfNotPresent
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# -- Pull secrets required for accessing the image repository.
+imagePullSecrets: []
+# -- Override the short name of resources.
+nameOverride: ""
+# -- Override the full name of resources.
+fullnameOverride: ""
+
+serviceAccount:
+  # -- Specifies whether a service account should be created.
+  create: true
+  # -- Annotations to add to the service account.
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template.
+  name: ""
+
+# -- Additional annotations to place on the webhook pods.
+podAnnotations: {}
+
+service:
+  # -- The type of cluster service to create.
+  type: ClusterIP
+  # -- The port the cluster service should listen on.
+  port: 443
+
+# -- Resource requests and limits for the deployment.
+resources: {}
+
+# -- Node selector for the deployment.
+nodeSelector: {}
+
+# -- Tolerations for the deployment.
+tolerations: []
+
+# -- Affinity for the deployment.
+affinity: {}
+
+webhook:
+  # -- Ignore the namespace of the `caddy-injector` in the webhook configuration.
+  # You only want to disable this if you have consistent replicas running.
+  ignoreReleaseNamespace: true
+  # -- Additional namespaces to ignore in the webhook configuration.
+  ignoreNamespaces: ["kube-system"]
+  # -- Fully override the namespace match expressions used in the webhook configuration.
+  # Takes precendence over `ignoreReleaseNamespace` and `ignoreNamespaces`.
+  matchExpressionsOverride: []

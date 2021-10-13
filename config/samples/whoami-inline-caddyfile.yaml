@@ -1,0 +1,63 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: example
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigner
+  namespace: example
+spec:
+  selfSigned: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoami
+  namespace: example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      annotations:
+        caddy.io/inject: ""
+        caddy.io/issuer: selfsigner
+        caddy.io/caddyfile-inline-template: |
+          {
+            https_port {{ .HTTPSPort }}
+          }
+          {{ .DNSNames | join ", " }} {
+            tls {{ .CertificateFile }} {{ .KeyFile }}
+            reverse_proxy 127.0.0.1:8080
+          }
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - name: whoami
+          image: containous/whoami
+          args:
+           - -port=8080
+          ports:
+            - name: http
+              containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami
+  namespace: example
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    app: whoami
+  ports:
+   - port: 443
+     protocol: TCP
+     targetPort: https

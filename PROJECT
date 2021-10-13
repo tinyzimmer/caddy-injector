@@ -1,0 +1,15 @@
+domain: caddy.io
+layout:
+- go.kubebuilder.io/v3
+projectName: caddy-injector
+repo: github.com/tinyzimmer/caddy-injector
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: caddy.io
+  group: config
+  kind: CaddyfileTemplate
+  path: github.com/tinyzimmer/caddy-injector/api/v1
+  version: v1
+version: "3"

@@ -1,0 +1,44 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "caddy-injector.fullname" . }}-manager
+  labels:
+    {{- include "caddy-injector.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - config.caddy.io
+  resources:
+  - caddyfiletemplates
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - config.caddy.io
+  resources:
+  - caddyfiletemplates/status
+  verbs:
+  - get
+- apiGroups:
+  - cert-manager.io
+  resources:
+  - certificates
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
