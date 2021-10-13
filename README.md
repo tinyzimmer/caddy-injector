@@ -135,3 +135,7 @@ make docker-build full-cluster
 
 When the command finishes you'll have a k3s cluster running on your machine where you can test and play around with the injector.
 
+## TODO
+
+- [ ] Docs could use improvement
+- [ ] Tests, tests, tests

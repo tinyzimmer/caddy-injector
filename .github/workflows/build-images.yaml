@@ -44,7 +44,7 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
 
       # Build and push injector image
-      - name: Build and Push Server Image
+      - name: Build and Push Injector Image
         uses: docker/build-push-action@v2
         with:
           platforms: linux/amd64,linux/arm64
