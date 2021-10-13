@@ -138,4 +138,5 @@ When the command finishes you'll have a k3s cluster running on your machine wher
 ## TODO
 
 - [ ] Docs could use improvement
+- [ ] A webhook for validating **CaddyfileTemplates**
 - [ ] Tests, tests, tests
