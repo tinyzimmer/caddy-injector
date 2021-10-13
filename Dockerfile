@@ -1,5 +1,7 @@
 # Build the manager binary
-FROM golang:1.16 as builder
+FROM golang:1.17 as builder
+
+RUN apt-get update && apt-get install -y upx
 
 WORKDIR /workspace
 # Copy the Go Modules manifests
@@ -17,6 +19,7 @@ COPY webhook/ webhook/
 
 # Build
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o manager main.go
+RUN upx -9 manager
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
