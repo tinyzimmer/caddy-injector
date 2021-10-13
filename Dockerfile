@@ -18,7 +18,7 @@ COPY webhook/ webhook/
 # COPY controllers/ controllers/
 
 # Build
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o manager main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -a -o manager main.go
 RUN upx -9 manager
 
 # Use distroless as minimal base image to package the manager binary
